@@ -90,11 +90,8 @@ class DbWrapper {
 }
 
 async function initDb() {
-  // Load WASM binary directly as a buffer for Vercel compatibility
-  const wasmPath = path.join(
-    path.dirname(require.resolve('sql.js')),
-    'sql-wasm.wasm'
-  );
+  // Load WASM binary from local copy (Vercel bundles project files but may miss node_modules assets)
+  const wasmPath = path.join(__dirname, 'sql-wasm.wasm');
   const wasmBinary = fs.readFileSync(wasmPath);
   const SQL = await initSqlJs({ wasmBinary });
 
