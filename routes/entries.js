@@ -1,5 +1,5 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const { getDb } = require('../db/database');
 
 const router = express.Router();
@@ -260,14 +260,14 @@ router.post('/', (req, res) => {
         // Find or create category
         let cat = db.prepare('SELECT id FROM categories WHERE name = ?').get(category);
         if (!cat) {
-            const catId = uuidv4();
+            const catId = crypto.randomUUID();
             const colors = ['#3b82f6', '#a855f7', '#6366f1', '#f97316', '#10b981', '#ef4444', '#eab308', '#06b6d4'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             db.prepare('INSERT INTO categories (id, name, color) VALUES (?, ?, ?)').run(catId, category, color);
             cat = { id: catId };
         }
 
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         const now = new Date().toISOString();
 
         db.prepare(`
@@ -335,7 +335,7 @@ router.put('/:id', (req, res) => {
         if (category !== undefined) {
             let cat = db.prepare('SELECT id FROM categories WHERE name = ?').get(category);
             if (!cat) {
-                const catId = uuidv4();
+                const catId = crypto.randomUUID();
                 const colors = ['#3b82f6', '#a855f7', '#6366f1', '#f97316', '#10b981', '#ef4444'];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 db.prepare('INSERT INTO categories (id, name, color) VALUES (?, ?, ?)').run(catId, category, color);

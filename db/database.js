@@ -1,7 +1,7 @@
 const initSqlJs = require('sql.js');
 const path = require('path');
 const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 // Vercel serverless: filesystem is read-only except /tmp
 const isVercel = process.env.VERCEL === '1';
@@ -160,14 +160,14 @@ function initializeSchema() {
 
 function seedData() {
   const categories = [
-    { id: uuidv4(), name: 'Expenses', color: '#3b82f6' },
-    { id: uuidv4(), name: 'Travel', color: '#a855f7' },
-    { id: uuidv4(), name: 'Software', color: '#6366f1' },
-    { id: uuidv4(), name: 'Marketing', color: '#f97316' },
-    { id: uuidv4(), name: 'Payroll', color: '#10b981' },
-    { id: uuidv4(), name: 'Utilities', color: '#ef4444' },
-    { id: uuidv4(), name: 'Equipment', color: '#eab308' },
-    { id: uuidv4(), name: 'Services', color: '#06b6d4' },
+    { id: crypto.randomUUID(), name: 'Expenses', color: '#3b82f6' },
+    { id: crypto.randomUUID(), name: 'Travel', color: '#a855f7' },
+    { id: crypto.randomUUID(), name: 'Software', color: '#6366f1' },
+    { id: crypto.randomUUID(), name: 'Marketing', color: '#f97316' },
+    { id: crypto.randomUUID(), name: 'Payroll', color: '#10b981' },
+    { id: crypto.randomUUID(), name: 'Utilities', color: '#ef4444' },
+    { id: crypto.randomUUID(), name: 'Equipment', color: '#eab308' },
+    { id: crypto.randomUUID(), name: 'Services', color: '#06b6d4' },
   ];
 
   const descriptions = {
@@ -229,7 +229,7 @@ function seedData() {
 
       db.prepare(
         'INSERT INTO entries (id, date, category_id, description, amount, status) VALUES (?, ?, ?, ?, ?, ?)'
-      ).run(uuidv4(), dateStr, cat.id, desc, amount, status);
+      ).run(crypto.randomUUID(), dateStr, cat.id, desc, amount, status);
     }
   });
 

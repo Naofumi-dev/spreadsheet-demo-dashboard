@@ -1,5 +1,5 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const { getDb } = require('../db/database');
 
 const router = express.Router();
@@ -46,7 +46,7 @@ router.post('/', (req, res) => {
             return res.status(409).json({ success: false, error: 'Category already exists' });
         }
 
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         db.prepare('INSERT INTO categories (id, name, color) VALUES (?, ?, ?)').run(id, name, color);
 
         const created = db.prepare('SELECT * FROM categories WHERE id = ?').get(id);
