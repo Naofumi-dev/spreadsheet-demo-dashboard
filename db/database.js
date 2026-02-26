@@ -90,7 +90,14 @@ class DbWrapper {
 }
 
 async function initDb() {
-  const SQL = await initSqlJs();
+  // Provide explicit path to WASM binary for Vercel compatibility
+  const wasmPath = path.join(
+    path.dirname(require.resolve('sql.js')),
+    'sql-wasm.wasm'
+  );
+  const SQL = await initSqlJs({
+    locateFile: () => wasmPath,
+  });
 
   // Try loading existing DB file
   let sqlDb;
