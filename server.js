@@ -6,6 +6,7 @@ const path = require('path');
 const entriesRouter = require('./routes/entries');
 const statsRouter = require('./routes/stats');
 const categoriesRouter = require('./routes/categories');
+const { dbReady } = require('./db/database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,16 @@ app.use((req, res, next) => {
 
 // ─── Static Files ─────────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ─── Ensure DB is ready before API requests ───────────────────────────────────
+app.use('/api', async (req, res, next) => {
+    try {
+        await dbReady;
+        next();
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Database initialization failed' });
+    }
+});
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 app.use('/api/entries', entriesRouter);
